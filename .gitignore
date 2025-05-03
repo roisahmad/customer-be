@@ -1,0 +1,7 @@
+/node_modules/
+data/Dataset.csv
+.env
+.DS_Store
+.vscode
+*.log
+*.tsbuildinfo       
