@@ -12,6 +12,40 @@ exports.getGenderDistribution = async (req, res) => {
   }
 };
 
+exports.getAgeDistribution = async (req, res) => {
+  try {
+    const currentYear = new Date().getFullYear();
+
+    const result = await Customer.aggregate([
+      {
+        $addFields: {
+          calculatedAge: {
+            $subtract: [currentYear, "$age"]
+          }
+        }
+      },
+      {
+        $bucket: {
+          groupBy: "$calculatedAge",
+          boundaries: [10, 20, 30, 40, 50, 60, 70],
+          default: "70+",
+          output: { count: { $sum: 1 } }
+        }
+      }
+    ]);
+
+    const labeledResult = result.map(bucket => ({
+      range: bucket._id === "70+" ? "70+" : `${bucket._id}-${bucket._id + 10}`,
+      count: bucket.count
+    }));
+
+    successResponse(res, 200, 'Age distribution retrieved successfully', labeledResult);
+  } catch (err) {
+    errorResponse(res, 500, err.message);
+  }
+};
+
+
 exports.getBrandDeviceDistribution = async (req, res) => {
   try {
     const result = await Customer.aggregate([

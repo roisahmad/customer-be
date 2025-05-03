@@ -9,14 +9,32 @@ exports.getCustomers = async (req, res) => {
     const customers = await Customer.find()
       .skip((page - 1) * limit)
       .limit(limit)
+      
 
     const total = await Customer.countDocuments();
+    
+    const response = customers.map((el) => ({
+                    _id: el?._id,
+                    number: el?.number,
+                    nameOfLocation: el?.nameOfLocation,
+                    date: el?.date,
+                    loginHour: el?.loginHour,
+                    name: el?.name,
+                    age: new Date().getFullYear() - el?.age,
+                    gender: el?.gender,
+                    email: el?.email,
+                    noTelp: el?.noTelp,
+                    brandDevice: el?.brandDevice,
+                    digitalInterest: el?.digitalInterest,
+                    locationType: el?.locationType,
+                    __v: el?.__v
+                }))
 
     successResponse(res, 200, 'Customers retrieved successfully', {
       total,
       page,
       limit,
-      data: customers,
+      data: response,
     });
   } catch (err) {
     errorResponse(res, 500, 'Error retrieving customers', err.message);

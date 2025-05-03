@@ -3,6 +3,7 @@ const router = express.Router();
 const analyticsController = require('../controllers/analyticController');
 
 router.get('/gender-distribution', analyticsController.getGenderDistribution);
+router.get('/age-distribution', analyticsController.getAgeDistribution);
 router.get('/brand-device', analyticsController.getBrandDeviceDistribution);
 router.get('/digital-interest', analyticsController.getDigitalInterestDistribution);
 router.get('/login-hour', analyticsController.getLoginHourDistribution);
